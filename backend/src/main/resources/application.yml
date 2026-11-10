@@ -1,0 +1,82 @@
+spring:
+  application:
+    name: flagship
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/flagship}
+    username: ${DB_USER:flagship}
+    password: ${DB_PASSWORD:flagship}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate   # Flyway owns the schema; Hibernate only validates it.
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+server:
+  port: 8080
+  shutdown: graceful
+
+flagship:
+  security:
+    jwt:
+      # DEV ONLY default. In any real environment set JWT_SECRET (at least 32 characters).
+      secret: ${JWT_SECRET:dev-only-secret-change-me-dev-only-secret-change-me}
+      expiration-minutes: 60
+  cache:
+    # How long an evaluation snapshot may live in Redis. It is also the worst-case staleness
+    # if Redis is unreachable at the moment a flag changes (see docs/adr/0006).
+    ttl-seconds: 60
+  rate-limit:
+    window-seconds: 60
+    auth-limit: 20          # per client IP, on /api/v1/auth/**
+    evaluate-limit: 3000    # per API key, on /api/v1/evaluate
+    api-limit: 300          # per logged-in user, on every other endpoint
+    key-prefix: flagship:rl
+
+logging:
+  pattern:
+    correlation: "[%X{requestId:-}] "   # request id in every console log line
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: readinessState,db,redis
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+logging:
+  structured:
+    format:
+      console: ecs   # JSON structured logs (Spring Boot 3.4+)

@@ -1,0 +1,12 @@
+package io.flagship.audit;
+
+public enum AuditAction {
+    FLAG_CREATED,
+    FLAG_UPDATED,
+    FLAG_ARCHIVED,
+    FLAG_ENVIRONMENT_UPDATED,
+    FLAG_RULES_UPDATED,
+    ENVIRONMENT_CREATED,
+    API_KEY_CREATED,
+    API_KEY_REVOKED
+}

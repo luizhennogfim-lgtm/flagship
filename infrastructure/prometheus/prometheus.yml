@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  # The API running inside Docker Compose (docker compose --profile full up)
+  - job_name: flagship-docker
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["backend:8080"]
+
+  # The API running on your machine, for example started from IntelliJ IDEA
+  - job_name: flagship-host
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["host.docker.internal:8080"]
