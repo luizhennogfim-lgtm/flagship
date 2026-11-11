@@ -20,7 +20,7 @@ Every request gets an `X-Request-Id` (generated, or taken from the caller when i
 ## Quality gate
 - `maven-enforcer` refuses to build with Java older than 21.
 - JaCoCo measures coverage from unit and integration tests together; `mvn verify` fails below 60% line coverage. The number is a floor to prevent erosion, not a goal: raise it as the project grows.
-- The CI pipeline (`.github/workflows/ci.yml`) runs compile, unit tests, integration tests, the quality gate and packaging, then builds the Docker image. A frontend job runs automatically once `frontend/package.json` exists.
+- The CI pipeline (`.github/workflows/ci.yml`) runs compile, unit tests, integration tests, the quality gate and packaging, then builds the Docker image. A frontend job runs lint and the production build.
 
 ## Not done (production notes)
 `/actuator/prometheus` is reachable without a token, like the health endpoints. In production expose it only on an internal network (or a separate management port) and block it at the reverse proxy.
