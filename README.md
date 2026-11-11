@@ -401,7 +401,7 @@ Testing approach: pure logic (deterministic bucketing, the flag evaluator with i
 |---|---|
 | **Backend** | compile, unit tests, integration tests with Testcontainers and the JaCoCo quality gate, package the jar; test and coverage reports and the jar are uploaded as artifacts |
 | **Backend Docker image** | builds the image after the backend job passes |
-| **Frontend** | `npm ci`, lint, tests (if defined), production build; runs when `frontend/package.json` exists |
+| **Frontend** | `npm ci`, lint, tests (if defined), production build |
 
 Dependabot opens weekly update pull requests for Maven, npm, GitHub Actions and Docker. Concurrent runs for the same branch are cancelled, and the workflow token is read-only.
 
