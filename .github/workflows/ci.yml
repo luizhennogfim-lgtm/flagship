@@ -77,7 +77,6 @@ jobs:
     name: Frontend (lint, test, build)
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    if: ${{ hashFiles('frontend/package.json') != '' }}
     defaults:
       run:
         working-directory: frontend
